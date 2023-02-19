@@ -2,8 +2,8 @@ package ptit.cnpm.becanteenweb.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ptit.cnpm.becanteenweb.model.Category;
+import ptit.cnpm.becanteenweb.model.Account;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category, Integer> {
+public interface AccountRepository extends JpaRepository<Account, String> {
 }

@@ -15,10 +15,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
     private String phoneNumber;
-    private String name;
+    private String firstName;
+    private String lastName;
     private String gender;
     private String email;
     private String profileImg;
-    private String status;
-    private String role;
 }
