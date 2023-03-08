@@ -22,4 +22,6 @@ public class AccountController {
     public Account newAccount(@RequestBody Account account) {
         return accountRepository.save(account);
     }
+
+
 }
