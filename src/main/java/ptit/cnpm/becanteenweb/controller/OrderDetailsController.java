@@ -3,12 +3,8 @@ package ptit.cnpm.becanteenweb.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ptit.cnpm.becanteenweb.model.OrderDetails;
-import ptit.cnpm.becanteenweb.model.Products;
 import ptit.cnpm.becanteenweb.repository.OrderDetailsRepository;
 import ptit.cnpm.becanteenweb.repository.ProductsRepository;
-
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 @CrossOrigin("http://localhost:3000")
