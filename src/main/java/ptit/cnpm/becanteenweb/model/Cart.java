@@ -20,10 +20,12 @@ public class Cart {
     private int orderId;
     private int productId;
     private int quantity;
-    private Date date;
+    private String status;
     private String name;
     private Double price;
     private int inStock;
     private String description;
     private String image;
+    private int deliveryId;
+    private int paymentId;
 }

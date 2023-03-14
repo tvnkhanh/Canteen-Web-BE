@@ -1,11 +1,9 @@
 package ptit.cnpm.becanteenweb.controller;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ptit.cnpm.becanteenweb.helper.DatabaseHelper;
 import ptit.cnpm.becanteenweb.model.Cart;
+import ptit.cnpm.becanteenweb.model.Orders;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -29,8 +27,9 @@ public class CartController {
 
                 while (rs.next()) {
                     Cart item = new Cart(rs.getInt("ORDER_ID"), rs.getInt("PRODUCT_ID"), rs.getInt("QUANTITY"),
-                            rs.getDate("DATE"), rs.getNString("NAME"), rs.getDouble("PRICE"),
-                            rs.getInt("IN_STOCK"), rs.getNString("DESCRIPTION"), rs.getString("IMAGE"));
+                            rs.getString("STATUS"), rs.getNString("NAME"), rs.getDouble("PRICE"),
+                            rs.getInt("IN_STOCK"), rs.getNString("DESCRIPTION"), rs.getString("IMAGE"),
+                            rs.getInt("DELIVERY_ID"), rs.getInt("PAYMENT_ID"));
                     result.add(item);
                 }
             }
