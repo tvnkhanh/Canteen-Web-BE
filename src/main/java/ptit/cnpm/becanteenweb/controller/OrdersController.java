@@ -92,6 +92,41 @@ public class OrdersController {
         return item;
     }
 
+    @GetMapping("/get-my-orders/{id}")
+    public List<OrdersInfo> getMyOrders(@PathVariable int id) {
+        List<OrdersInfo> result = new ArrayList<>();
+
+        try {
+            Connection con = DatabaseHelper.openConnection();
+            CallableStatement stmt = con.prepareCall("{call SP_MY_ORDERS(?)}");
+            stmt.setInt(1, id);
+            Boolean hasResult = stmt.execute();
+            if (hasResult) {
+                ResultSet rs = stmt.getResultSet();
+
+                while (rs.next()) {
+                    OrdersInfo item = new OrdersInfo();
+                    item.setUserId(rs.getInt("USER_ID"));
+                    item.setOrderId(rs.getInt("ORDER_ID"));
+                    item.setStatus(rs.getString("STATUS"));
+                    item.setPaymentId(rs.getInt("PAYMENT_ID"));
+                    item.setDeliveryId(rs.getInt("DELIVERY_ID"));
+                    item.setName(rs.getNString("NAME"));
+                    item.setImage(rs.getString("IMAGE"));
+                    item.setQuantity(rs.getInt("QUANTITY"));
+                    item.setPrice(rs.getDouble("PRICE"));
+
+                    result.add(item);
+                }
+            }
+            stmt.close();
+            con.close();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+        return result;
+    }
+
     @PostMapping("/new-order")
     public Orders createOrder(@RequestBody Orders orders) {
         Delivery delivery = deliveryRepository.getInitDelivery();
@@ -120,6 +155,14 @@ public class OrdersController {
     public Orders handleMakeOrder(@RequestBody Orders order) {
         Orders orderToMake = ordersRepository.findById(order.getOrderId()).get();
         orderToMake.setStatus("ORDER");
+
+        return ordersRepository.save(orderToMake);
+    }
+
+    @PostMapping("/cancel-order")
+    public Orders handleCancelOrder(@RequestBody Orders order) {
+        Orders orderToMake = ordersRepository.findById(order.getOrderId()).get();
+        orderToMake.setStatus("CANCEL");
 
         return ordersRepository.save(orderToMake);
     }

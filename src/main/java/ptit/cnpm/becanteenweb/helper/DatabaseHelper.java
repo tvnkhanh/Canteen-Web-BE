@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DatabaseHelper {
     public static Connection openConnection() throws SQLException {
-        String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=CANTEEN;user=sa;password=2042002;encrypt=false";
+        String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=CANTEEN;user=sa;password=123456;encrypt=false";
         Connection connection = DriverManager.getConnection(connectionUrl);
         return connection;
     }

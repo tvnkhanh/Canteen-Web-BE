@@ -20,4 +20,9 @@ public class OrdersInfo {
     private Time startTime;
     private Time orderTime;
     private Time arrival;
+    private String name;
+    private String image;
+    private int quantity;
+    private String description;
+    private Double price;
 }
