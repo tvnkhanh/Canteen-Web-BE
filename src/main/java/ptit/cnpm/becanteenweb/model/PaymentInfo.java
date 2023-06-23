@@ -1,9 +1,8 @@
 package ptit.cnpm.becanteenweb.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +13,7 @@ import java.sql.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "PAYMENT_INFO")
 public class PaymentInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,5 +22,8 @@ public class PaymentInfo {
     private String creditCardNum;
     private Date validThru;
     private String cvv;
-    private int userId;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    @JsonIgnore
+    private User user;
 }

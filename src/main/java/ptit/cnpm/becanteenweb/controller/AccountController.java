@@ -2,6 +2,7 @@ package ptit.cnpm.becanteenweb.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ptit.cnpm.becanteenweb.dto.AccountDTO;
 import ptit.cnpm.becanteenweb.helper.DatabaseHelper;
 import ptit.cnpm.becanteenweb.model.*;
 import ptit.cnpm.becanteenweb.repository.AccountRepository;
@@ -25,8 +26,8 @@ public class AccountController {
 //    }
 
     @GetMapping("/user/{email}")
-    public List<AccountInfo> getAccountInfo(@PathVariable String email) {
-        List<AccountInfo> result = new ArrayList<>();
+    public List<AccountDTO> getAccountInfo(@PathVariable String email) {
+        List<AccountDTO> result = new ArrayList<>();
         try {
             Connection con = DatabaseHelper.openConnection();
             CallableStatement stmt = con.prepareCall("{call SP_USER_INFO(?)}");
@@ -36,7 +37,7 @@ public class AccountController {
                 ResultSet rs = stmt.getResultSet();
 
                 while (rs.next()) {
-                    AccountInfo item = new AccountInfo();
+                    AccountDTO item = new AccountDTO();
                     item.setEmail(rs.getNString("EMAIL"));
                     item.setPassword(rs.getString("PASSWORD"));
                     item.setUserId(rs.getInt("USER_ID"));
@@ -60,8 +61,8 @@ public class AccountController {
     }
 
     @GetMapping("/users/{role}")
-    public List<AccountInfo> getAllUserInfo(@PathVariable String role) {
-        List<AccountInfo> result = new ArrayList<>();
+    public List<AccountDTO> getAllUserInfo(@PathVariable String role) {
+        List<AccountDTO> result = new ArrayList<>();
         try {
             Connection con = DatabaseHelper.openConnection();
             CallableStatement stmt = con.prepareCall("{call SP_ALL_USER_INFO(?)}");
@@ -71,7 +72,7 @@ public class AccountController {
                 ResultSet rs = stmt.getResultSet();
 
                 while (rs.next()) {
-                    AccountInfo item = new AccountInfo();
+                    AccountDTO item = new AccountDTO();
                     item.setEmail(rs.getNString("EMAIL"));
                     item.setPassword(rs.getString("PASSWORD"));
                     item.setUserId(rs.getInt("USER_ID"));

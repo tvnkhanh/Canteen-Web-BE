@@ -2,6 +2,7 @@ package ptit.cnpm.becanteenweb.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ptit.cnpm.becanteenweb.dto.UserAddressDTO;
 import ptit.cnpm.becanteenweb.helper.DatabaseHelper;
 import ptit.cnpm.becanteenweb.model.*;
 import ptit.cnpm.becanteenweb.repository.AddressRepository;
@@ -19,8 +20,8 @@ public class AddressController {
     private AddressRepository addressRepository;
 
     @GetMapping("/user/address/{userId}")
-    public List<UserAddress> getUserAddress(@PathVariable int userId) {
-        List<UserAddress> result = new ArrayList<>();
+    public List<UserAddressDTO> getUserAddress(@PathVariable int userId) {
+        List<UserAddressDTO> result = new ArrayList<>();
         try {
             Connection con = DatabaseHelper.openConnection();
             CallableStatement stmt = con.prepareCall("{call SP_USER_ADDRESS(?)}");
@@ -30,7 +31,7 @@ public class AddressController {
                 ResultSet rs = stmt.getResultSet();
 
                 while (rs.next()) {
-                    UserAddress item = new UserAddress();
+                    UserAddressDTO item = new UserAddressDTO();
 
                     item.setFirstName(rs.getNString("FIRST_NAME"));
                     item.setLastName(rs.getNString("LAST_NAME"));

@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.Query;
 import ptit.cnpm.becanteenweb.model.Orders;
 
 public interface OrdersRepository extends JpaRepository<Orders, Integer> {
+    Orders findByOrderId(int id);
 }

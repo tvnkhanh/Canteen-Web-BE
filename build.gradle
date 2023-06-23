@@ -23,6 +23,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.hibernate:hibernate-core:6.2.0.CR3'
+    implementation group: 'org.hibernate', name: 'hibernate-entitymanager', version: '6.0.0.Alpha7', ext: 'pom'
+    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.4.0-b180830.0359'
     implementation 'junit:junit:4.13.1'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

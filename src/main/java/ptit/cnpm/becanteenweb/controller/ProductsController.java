@@ -3,7 +3,6 @@ package ptit.cnpm.becanteenweb.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ptit.cnpm.becanteenweb.helper.DatabaseHelper;
-import ptit.cnpm.becanteenweb.model.AccountInfo;
 import ptit.cnpm.becanteenweb.model.Products;
 import ptit.cnpm.becanteenweb.repository.ProductsRepository;
 

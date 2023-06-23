@@ -1,13 +1,14 @@
 package ptit.cnpm.becanteenweb.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@Table(name = "ACCOUNT")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Account {
@@ -15,5 +16,10 @@ public class Account {
     private String email;
     private String password;
     private String status;
-    private int roleId;
+    @ManyToOne
+    @JoinColumn(name="roleId")
+    @JsonBackReference
+    private RoleEntity role;
+    @OneToOne(mappedBy = "account")
+    private User user;
 }

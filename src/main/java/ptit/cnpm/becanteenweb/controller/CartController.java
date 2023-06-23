@@ -2,8 +2,7 @@ package ptit.cnpm.becanteenweb.controller;
 
 import org.springframework.web.bind.annotation.*;
 import ptit.cnpm.becanteenweb.helper.DatabaseHelper;
-import ptit.cnpm.becanteenweb.model.Cart;
-import ptit.cnpm.becanteenweb.model.Orders;
+import ptit.cnpm.becanteenweb.dto.Cart;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;

@@ -1,5 +1,6 @@
 package ptit.cnpm.becanteenweb.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,10 +10,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@IdClass(CompositeKeyAddress.class)
+@Table(name = "ADDRESS")
 public class Address {
     @Id
     private String address;
-    @Id
-    private int userId;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    @JsonBackReference
+    private User user;
 }

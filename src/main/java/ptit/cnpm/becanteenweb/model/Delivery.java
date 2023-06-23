@@ -1,5 +1,7 @@
 package ptit.cnpm.becanteenweb.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,6 +14,7 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "DELIVERY")
 public class Delivery {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,4 +23,7 @@ public class Delivery {
     private Time orderTime;
     private Time startTime;
     private Time arrival;
+    @OneToMany(mappedBy = "delivery", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Collection<Orders> detailPurchases;
 }

@@ -1,8 +1,8 @@
 package ptit.cnpm.becanteenweb.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,12 +12,21 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@IdClass(CompositeKey.class)
+@Table(name = "ORDER_DETAILS")
 public class OrderDetails {
-    @Id
-    private int orderId;
-    @Id
-    private int productId;
+    @EmbeddedId
+    CompositeKey id;
+    @ManyToOne
+    @MapsId("orderId")
+    @JoinColumn(name = "ORDER_ID")
+    @JsonIgnore
+    Orders orders;
+
+    @ManyToOne
+    @MapsId("productId")
+    @JoinColumn(name = "PRODUCT_ID")
+    @JsonIgnore
+    Products products;
     private int quantity;
 
 }

@@ -1,17 +1,19 @@
 package ptit.cnpm.becanteenweb.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Collection;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "PRODUCTS")
 public class Products {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,4 +23,13 @@ public class Products {
     private int quantity;
     private String description;
     private String image;
+    @OneToMany(mappedBy = "products", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
+    Collection<OrderDetails> orderDetails;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "PRODUCT_DETAILS",
+            joinColumns = {@JoinColumn(name = "productId")},
+            inverseJoinColumns = {@JoinColumn(name = "categoryId")})
+    @JsonIgnore
+    private Collection<Category> categories;
 }

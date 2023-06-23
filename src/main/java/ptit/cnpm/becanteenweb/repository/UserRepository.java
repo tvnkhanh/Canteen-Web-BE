@@ -9,6 +9,6 @@ import ptit.cnpm.becanteenweb.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-    @Query("select u from User u where u.email = ?1")
+    @Query("select u from User u where u.account.email = ?1")
     User findByEmailAddress(String email);
 }

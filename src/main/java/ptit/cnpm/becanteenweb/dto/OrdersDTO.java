@@ -1,4 +1,4 @@
-package ptit.cnpm.becanteenweb.model;
+package ptit.cnpm.becanteenweb.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.sql.Time;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrdersInfo {
+public class OrdersDTO {
     private int userId;
     private int orderId;
     private int paymentId;

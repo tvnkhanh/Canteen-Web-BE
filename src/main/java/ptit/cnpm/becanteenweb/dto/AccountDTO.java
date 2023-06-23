@@ -1,4 +1,4 @@
-package ptit.cnpm.becanteenweb.model;
+package ptit.cnpm.becanteenweb.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountInfo {
+public class AccountDTO {
     private String email;
     private String password;
     private int userId;

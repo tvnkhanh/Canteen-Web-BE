@@ -1,11 +1,13 @@
 package ptit.cnpm.becanteenweb.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Collection;
 
 @Entity
 @Table(name = "ROLE")
@@ -16,5 +18,7 @@ public class RoleEntity {
     @Id
     private int roleId;
     private String role;
-    private int email;
+    @OneToMany(mappedBy="role", fetch= FetchType.EAGER)
+    @JsonIgnore
+    private Collection<Account> accounts;
 }

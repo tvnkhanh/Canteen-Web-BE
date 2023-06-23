@@ -1,11 +1,9 @@
-package ptit.cnpm.becanteenweb.model;
+package ptit.cnpm.becanteenweb.dto;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.sql.Date;
 
 @Entity
 @Data

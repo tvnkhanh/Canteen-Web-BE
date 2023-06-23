@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface PaymentInfoRepository extends JpaRepository<PaymentInfo, Integer> {
-    @Query("select p from PaymentInfo p where p.userId = ?1")
+    @Query("select p from PaymentInfo p where p.user.userId = ?1")
     public List<PaymentInfo> getCardById(int userId);
 }

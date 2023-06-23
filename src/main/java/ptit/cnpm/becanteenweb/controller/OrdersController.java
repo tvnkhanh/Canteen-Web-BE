@@ -1,11 +1,14 @@
 package ptit.cnpm.becanteenweb.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ptit.cnpm.becanteenweb.helper.DatabaseHelper;
 import ptit.cnpm.becanteenweb.model.Delivery;
+import ptit.cnpm.becanteenweb.model.OrderDetails;
 import ptit.cnpm.becanteenweb.model.Orders;
-import ptit.cnpm.becanteenweb.model.OrdersInfo;
+import ptit.cnpm.becanteenweb.dto.OrdersDTO;
+import ptit.cnpm.becanteenweb.model.Products;
 import ptit.cnpm.becanteenweb.repository.DeliveryRepository;
 import ptit.cnpm.becanteenweb.repository.OrdersRepository;
 
@@ -13,6 +16,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -28,8 +32,8 @@ public class OrdersController {
     }
 
     @GetMapping("/orders-info")
-    public List<OrdersInfo> getAllOrdersInfo() {
-        List<OrdersInfo> result = new ArrayList<>();
+    public List<OrdersDTO> getAllOrdersInfo() {
+        List<OrdersDTO> result = new ArrayList<>();
         try {
             Connection con = DatabaseHelper.openConnection();
             CallableStatement stmt = con.prepareCall("{call SP_ORDERS_INFO}");
@@ -38,7 +42,7 @@ public class OrdersController {
                 ResultSet rs = stmt.getResultSet();
 
                 while (rs.next()) {
-                    OrdersInfo item = new OrdersInfo();
+                    OrdersDTO item = new OrdersDTO();
                     item.setUserId(rs.getInt("USER_ID"));
                     item.setOrderId(rs.getInt("ORDER_ID"));
                     item.setStatus(rs.getString("STATUS"));
@@ -63,8 +67,8 @@ public class OrdersController {
     }
 
     @GetMapping("/orders-info/{status}/{id}")
-    public OrdersInfo getOrderInfo(@PathVariable String status, @PathVariable int id) {
-        OrdersInfo item = new OrdersInfo();
+    public OrdersDTO getOrderInfo(@PathVariable String status, @PathVariable int id) {
+        OrdersDTO item = new OrdersDTO();
         try {
             Connection con = DatabaseHelper.openConnection();
             CallableStatement stmt = con.prepareCall("{call SP_ORDER(?, ?)}");
@@ -93,8 +97,8 @@ public class OrdersController {
     }
 
     @GetMapping("/get-my-orders/{id}")
-    public List<OrdersInfo> getMyOrders(@PathVariable int id) {
-        List<OrdersInfo> result = new ArrayList<>();
+    public List<OrdersDTO> getMyOrders(@PathVariable int id) {
+        List<OrdersDTO> result = new ArrayList<>();
 
         try {
             Connection con = DatabaseHelper.openConnection();
@@ -105,7 +109,7 @@ public class OrdersController {
                 ResultSet rs = stmt.getResultSet();
 
                 while (rs.next()) {
-                    OrdersInfo item = new OrdersInfo();
+                    OrdersDTO item = new OrdersDTO();
                     item.setUserId(rs.getInt("USER_ID"));
                     item.setOrderId(rs.getInt("ORDER_ID"));
                     item.setStatus(rs.getString("STATUS"));
@@ -130,7 +134,7 @@ public class OrdersController {
     @PostMapping("/new-order")
     public Orders createOrder(@RequestBody Orders orders) {
         Delivery delivery = deliveryRepository.getInitDelivery();
-        orders.setDeliveryId(delivery.getDeliveryId());
+        orders.setDelivery(delivery);
 
         return ordersRepository.save(orders);
     }
@@ -152,11 +156,19 @@ public class OrdersController {
     }
 
     @PostMapping("/make-order")
-    public Orders handleMakeOrder(@RequestBody Orders order) {
+    public HttpStatus handleMakeOrder(@RequestBody Orders order) {
         Orders orderToMake = ordersRepository.findById(order.getOrderId()).get();
-        orderToMake.setStatus("ORDER");
+        Collection<OrderDetails> orderDetailsList = orderToMake.getOrderDetails();
 
-        return ordersRepository.save(orderToMake);
+        for (OrderDetails orderDetails : orderDetailsList) {
+            if (orderDetails.getProducts().getQuantity() < orderDetails.getQuantity()) {
+                return HttpStatus.FORBIDDEN;
+            }
+        }
+
+        orderToMake.setStatus("ORDER");
+        ordersRepository.save(orderToMake);
+        return HttpStatus.OK;
     }
 
     @PostMapping("/cancel-order")
