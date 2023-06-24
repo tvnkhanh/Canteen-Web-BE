@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("*")
 public class CartController {
     @GetMapping("/carts/{id}")
     public List<Cart> getAllCartItem(@PathVariable int id) {

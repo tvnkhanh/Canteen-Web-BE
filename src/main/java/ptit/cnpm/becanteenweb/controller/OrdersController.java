@@ -4,19 +4,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ptit.cnpm.becanteenweb.helper.DatabaseHelper;
-import ptit.cnpm.becanteenweb.model.Delivery;
-import ptit.cnpm.becanteenweb.model.OrderDetails;
-import ptit.cnpm.becanteenweb.model.Orders;
+import ptit.cnpm.becanteenweb.model.*;
 import ptit.cnpm.becanteenweb.dto.OrdersDTO;
-import ptit.cnpm.becanteenweb.model.Products;
 import ptit.cnpm.becanteenweb.repository.DeliveryRepository;
 import ptit.cnpm.becanteenweb.repository.OrdersRepository;
+import ptit.cnpm.becanteenweb.repository.PaymentRepository;
+import ptit.cnpm.becanteenweb.repository.UserRepository;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -26,6 +27,10 @@ public class OrdersController {
     private OrdersRepository ordersRepository;
     @Autowired
     private DeliveryRepository deliveryRepository;
+    @Autowired
+    private PaymentRepository paymentRepository;
+    @Autowired
+    private UserRepository userRepository;
     @GetMapping("/orders")
     public List<Orders> getAllOrders() {
         return ordersRepository.findAll();
@@ -131,33 +136,54 @@ public class OrdersController {
         return result;
     }
 
-    @PostMapping("/new-order")
-    public Orders createOrder(@RequestBody Orders orders) {
-        Delivery delivery = deliveryRepository.getInitDelivery();
+    @PostMapping("/new-order/{userId}")
+    public Orders createOrder(@RequestBody Orders orders, @PathVariable int userId) {
+        Delivery delivery = new Delivery();
+        deliveryRepository.save(delivery);
+        delivery = deliveryRepository.getInitDelivery();
+
+        Payment payment = paymentRepository.getPaymentByMethod(PaymentMethod.CASH);
+        User user = userRepository.findByUserId(userId);
+
         orders.setDelivery(delivery);
+        orders.setPayment(payment);
+        orders.setUser(user);
 
         return ordersRepository.save(orders);
     }
 
-    @PostMapping("/get-order")
-    public Orders handleGetOrder(@RequestBody Orders order) {
-        Orders orderToGet = ordersRepository.findById(order.getOrderId()).get();
-        orderToGet.setStatus("RECEIVED");
+    @PostMapping("/get-order/{orderId}")
+    public HttpStatus handleGetOrder(@PathVariable int orderId) {
+        Orders orderToGet = ordersRepository.findById(orderId).get();
+        Collection<OrderDetails> orderDetailsList = orderToGet.getOrderDetails();
 
-        return ordersRepository.save(orderToGet);
+        for (OrderDetails orderDetails : orderDetailsList) {
+            if (orderDetails.getProducts().getQuantity() < orderDetails.getQuantity()) {
+                orderToGet.setStatus("CANCEL");
+                ordersRepository.save(orderToGet);
+                return HttpStatus.FORBIDDEN;
+            }
+        }
+
+        for (OrderDetails orderDetails : orderDetailsList) {
+            orderDetails.getProducts().setQuantity(orderDetails.getProducts().getQuantity() - orderDetails.getQuantity());
+        }
+        orderToGet.setStatus("RECEIVED");
+        ordersRepository.save(orderToGet);
+        return HttpStatus.OK;
     }
 
-    @PostMapping("/done-order")
-    public Orders handleDoneOrder(@RequestBody Orders order) {
-        Orders orderToGet = ordersRepository.findById(order.getOrderId()).get();
+    @PostMapping("/done-order/{orderId}")
+    public Orders handleDoneOrder(@PathVariable int orderId) {
+        Orders orderToGet = ordersRepository.findById(orderId).get();
         orderToGet.setStatus("SUCCESS");
 
         return ordersRepository.save(orderToGet);
     }
 
-    @PostMapping("/make-order")
-    public HttpStatus handleMakeOrder(@RequestBody Orders order) {
-        Orders orderToMake = ordersRepository.findById(order.getOrderId()).get();
+    @PostMapping("/make-order/{orderId}")
+    public HttpStatus handleMakeOrder(@PathVariable int orderId) {
+        Orders orderToMake = ordersRepository.findById(orderId).get();
         Collection<OrderDetails> orderDetailsList = orderToMake.getOrderDetails();
 
         for (OrderDetails orderDetails : orderDetailsList) {
@@ -171,9 +197,9 @@ public class OrdersController {
         return HttpStatus.OK;
     }
 
-    @PostMapping("/cancel-order")
-    public Orders handleCancelOrder(@RequestBody Orders order) {
-        Orders orderToMake = ordersRepository.findById(order.getOrderId()).get();
+    @PostMapping("/cancel-order/{orderId}")
+    public Orders handleCancelOrder(@PathVariable int orderId) {
+        Orders orderToMake = ordersRepository.findById(orderId).get();
         orderToMake.setStatus("CANCEL");
 
         return ordersRepository.save(orderToMake);

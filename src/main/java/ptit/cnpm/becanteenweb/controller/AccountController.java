@@ -6,6 +6,7 @@ import ptit.cnpm.becanteenweb.dto.AccountDTO;
 import ptit.cnpm.becanteenweb.helper.DatabaseHelper;
 import ptit.cnpm.becanteenweb.model.*;
 import ptit.cnpm.becanteenweb.repository.AccountRepository;
+import ptit.cnpm.becanteenweb.repository.RoleRepository;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -14,10 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("*")
 public class AccountController {
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private RoleRepository roleRepository;
 
 //    @GetMapping("/user/{email}")
 //    public Account getAccount(@PathVariable String email) {
@@ -113,6 +116,8 @@ public class AccountController {
 
     @PostMapping("/account")
     public Account newAccount(@RequestBody Account account) {
+        RoleEntity role = roleRepository.findByRole(Role.USER);
+        account.setRole(role);
         return accountRepository.save(account);
     }
 

@@ -15,10 +15,6 @@ import java.sql.Time;
 public class DeliveryController {
     @Autowired
     private DeliveryRepository deliveryRepository;
-    @PostMapping("/init-delivery")
-    public Delivery createInitDelivery(@RequestBody Delivery delivery) {
-        return deliveryRepository.save(delivery);
-    }
 
     @PostMapping("/set-time")
     public Delivery handleAddTime(@RequestBody Delivery delivery) {

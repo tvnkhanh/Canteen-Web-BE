@@ -25,5 +25,5 @@ public class Delivery {
     private Time arrival;
     @OneToMany(mappedBy = "delivery", fetch = FetchType.EAGER)
     @JsonIgnore
-    private Collection<Orders> detailPurchases;
+    private Collection<Orders> orders;
 }

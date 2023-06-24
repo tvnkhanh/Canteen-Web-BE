@@ -12,7 +12,7 @@ import ptit.cnpm.becanteenweb.repository.OrdersRepository;
 import ptit.cnpm.becanteenweb.repository.ProductsRepository;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("*")
 public class OrderDetailsController {
     @Autowired
     private OrderDetailsRepository ordersRepository;

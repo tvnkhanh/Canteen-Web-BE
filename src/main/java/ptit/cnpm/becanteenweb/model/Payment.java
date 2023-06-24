@@ -17,7 +17,9 @@ import java.util.Collection;
 public class Payment {
     @Id
     private int paymentId;
-    private String method;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "METHOD")
+    private PaymentMethod method;
     @OneToMany(mappedBy = "payment", fetch = FetchType.EAGER)
     @JsonIgnore
     private Collection<Orders> orders;

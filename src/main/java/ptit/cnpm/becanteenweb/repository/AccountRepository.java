@@ -9,5 +9,5 @@ import ptit.cnpm.becanteenweb.model.Account;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, String> {
-
+    Account findByEmail(String email);
 }

@@ -17,7 +17,9 @@ import java.util.Collection;
 public class RoleEntity {
     @Id
     private int roleId;
-    private String role;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ROLE")
+    private Role role;
     @OneToMany(mappedBy="role", fetch= FetchType.EAGER)
     @JsonIgnore
     private Collection<Account> accounts;

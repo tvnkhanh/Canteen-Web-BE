@@ -1,6 +1,5 @@
 package ptit.cnpm.becanteenweb.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,6 +16,7 @@ import java.sql.Date;
 public class PaymentInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "PINFO_ID")
     private int pinfoId;
     private String cardHolder;
     private String creditCardNum;
